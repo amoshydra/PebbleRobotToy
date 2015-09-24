@@ -18,7 +18,7 @@ You can download and install the latest pdw manually from the [Releases Channel]
 
 Pebble Apps Store version can be downloaded from [here](http://apps.getpebble.com/en_US/application/55f32252f4177d2e6c000009).
 
-### Image are sourced and edited from
+### Images are sourced and edited from
  * Amazon
  * webdesignerdepot
  * wearewearable
