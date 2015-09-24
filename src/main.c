@@ -1,9 +1,14 @@
 #include <pebble.h>
 
 // watch screen constant
-const int SCREEN_HEIGHT = 168;
-const int SCREEN_WIDTH = 144;
- 
+#ifdef PBL_ROUND
+  const int SCREEN_HEIGHT = 180
+  const int SCREEN_WIDTH = 180
+#else
+  const int SCREEN_HEIGHT = 168;
+  const int SCREEN_WIDTH = 144;
+#endif
+  
 // watch layer geometry
 const int EYE_RADIUS = 28;
 const int EYE_BORDER_SIZE = 4;
@@ -33,14 +38,10 @@ const int  COLOR_BACKGROUND = 2;
 const int COLOR_SWITCH_LEVEL = 320;
 GColor COLOR_TEMPLATE[3];
 
-// font settings
-#ifdef PBL_COLOR
-  GFont FONT_KEY_TIME = FONT_KEY_LECO_28_LIGHT_NUMBERS;
-  GFont FONT_KEY_TEXT = FONT_KEY_GOTHIC_24_BOLD;
-#else
-  GFont FONT_KEY_TIME = FONT_KEY_BITHAM_30_BLACK;
-  GFont FONT_KEY_TEXT = FONT_KEY_GOTHIC_24_BOLD;
-#endif
+// font constant
+const int FONT_TIME = 0;
+const int FONT_TEXT = 1;
+GFont FONT_TEMPLATE[2];
 
 // static pointer to Window variable
 static Window *s_main_window;
@@ -95,6 +96,22 @@ static void colorChanger() {
 }
 #endif
 
+static void initialise_font_template() {
+  GFont fontTime;
+  GFont fontText;
+  
+#ifdef PBL_COLOR
+  fontTime = fonts_get_system_font(FONT_KEY_LECO_28_LIGHT_NUMBERS);
+  fontText = fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD);
+#else
+  fontTime = fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK);
+  fontText = fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD);
+#endif
+  
+  FONT_TEMPLATE[FONT_TIME] = fontTime;
+  FONT_TEMPLATE[FONT_TEXT] = fontText;
+}
+  
 static void initialise_color_template() {
   GColor colorPrimary;
   GColor colorSecondary;
@@ -156,7 +173,7 @@ static void update_time() {
 static void text_layer_insert(Window *window, TextLayer *s_layer, GColor GCFore, GColor GCBack, GFont GFFont) {
   text_layer_set_background_color(s_layer, GCBack);
   text_layer_set_text_color(s_layer, GCFore);  
-  text_layer_set_font(s_layer, fonts_get_system_font(GFFont));
+  text_layer_set_font(s_layer, GFFont);
   text_layer_set_text_alignment(s_layer, GTextAlignmentCenter);
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_layer));  
 }
@@ -256,14 +273,14 @@ static void main_window_load(Window *window) {
   
   // Create time TextLayer
   s_time_hour_layer = text_layer_create(GRect(LEFT_EYE_CENTER - EYE_RADIUS, EYES_LEVEL - fontSize / 2 - heightAdjustment, EYE_RADIUS * 2, fontSize));
-  text_layer_insert_s(window, s_time_hour_layer, FONT_KEY_TIME, 1);
+  text_layer_insert_s(window, s_time_hour_layer, FONT_TEMPLATE[FONT_TIME], 1);
   
   s_time_minute_layer = text_layer_create(GRect(RIGHT_EYE_CENTER - EYE_RADIUS, EYES_LEVEL - fontSize / 2 - heightAdjustment, EYE_RADIUS * 2, fontSize));
-  text_layer_insert_s(window, s_time_minute_layer, FONT_KEY_TIME, 1);
+  text_layer_insert_s(window, s_time_minute_layer, FONT_TEMPLATE[FONT_TIME], 1);
   
   // Create date TextLayer
   s_date_layer = text_layer_create(GRect(0, 118, 144, 50));
-  text_layer_insert_s(window, s_date_layer, FONT_KEY_TEXT, 1);
+  text_layer_insert_s(window, s_date_layer, FONT_TEMPLATE[FONT_TEXT], 1);
 }
   
 static void main_window_unload(Window *window) {
@@ -303,6 +320,9 @@ static void init() {
   
   // Color assignment
   initialise_color_template();
+  
+  // Font assignment
+  initialise_font_template();
   
   // Create main Window element and assign to pointer
   s_main_window = window_create();
