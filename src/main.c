@@ -2,8 +2,8 @@
 
 // watch screen constant
 #ifdef PBL_ROUND
-  const int SCREEN_HEIGHT = 180
-  const int SCREEN_WIDTH = 180
+  const int SCREEN_HEIGHT = 180;
+  const int SCREEN_WIDTH = 180;
 #else
   const int SCREEN_HEIGHT = 168;
   const int SCREEN_WIDTH = 144;
