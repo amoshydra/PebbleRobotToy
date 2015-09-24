@@ -1,0 +1,23 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "CodeHydra",
+    "longName": "Robot Toy",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "sdkVersion": "3",
+    "shortName": "Robot Toy",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
+    "uuid": "73db1b08-a996-4999-ae9e-19f8813d1617",
+    "versionLabel": "1.01",
+    "watchapp": {
+        "watchface": true
+    }
+}
