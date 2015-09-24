@@ -13,8 +13,8 @@
 const int EYE_RADIUS = 28;
 const int EYE_BORDER_SIZE = 4;
 #ifdef PBL_ROUND
-const int EYES_LEVEL = 50;
-const int EYES_DISTANCE = 6;
+const int EYES_LEVEL = 56;
+const int EYES_DISTANCE = 10;
 #else
 const int EYES_LEVEL = 45;
 const int EYES_DISTANCE = 10;  
