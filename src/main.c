@@ -278,8 +278,8 @@ static void main_window_load(Window *window) {
   s_time_minute_layer = text_layer_create(GRect(RIGHT_EYE_CENTER - EYE_RADIUS, EYES_LEVEL - fontSize / 2 - heightAdjustment, EYE_RADIUS * 2, fontSize));
   text_layer_insert_s(window, s_time_minute_layer, FONT_TEMPLATE[FONT_TIME], 1);
   
-  // Create date TextLayer
-  s_date_layer = text_layer_create(GRect(0, 118, 144, 50));
+  // Create date TextLayer 
+  s_date_layer = text_layer_create(GRect(0, MOUTH_LEVEL - (MOUTH_HEIGHT/2), SCREEN_WIDTH, MOUTH_HEIGHT));
   text_layer_insert_s(window, s_date_layer, FONT_TEMPLATE[FONT_TEXT], 1);
 }
   
