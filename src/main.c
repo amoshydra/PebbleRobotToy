@@ -12,17 +12,31 @@
 // watch layer geometry
 const int EYE_RADIUS = 28;
 const int EYE_BORDER_SIZE = 4;
+#ifdef PBL_ROUND
+const int EYES_LEVEL = 50;
+const int EYES_DISTANCE = 6;
+#else
 const int EYES_LEVEL = 45;
-const int EYES_DISTANCE = 10;
+const int EYES_DISTANCE = 10;  
+#endif
 
 const int MOUTH_BORDER_SIZE = 4;
-const int MOUTH_LEVEL = 135;
 const int MOUTH_HEIGHT = 37;
+#ifdef PBL_ROUND
+const int MOUTH_LEVEL = 128;
+const int MOUTH_WIDTH = 120;
+#else
+const int MOUTH_LEVEL = 135;
 const int MOUTH_WIDTH = 130;
+#endif
 
-const int NOSE_LEVEL = 100;
 const int NOSE_SIZE = 30;
 const int NOSE_BORDER_SIZE = 3;
+#ifdef PBL_ROUND
+const int NOSE_LEVEL = 98;
+#else
+const int NOSE_LEVEL = 100;
+#endif
 
 // color constant
 const int  COLOR_MULTIPLING_FACTOR = 85;
@@ -279,7 +293,7 @@ static void main_window_load(Window *window) {
   text_layer_insert_s(window, s_time_minute_layer, FONT_TEMPLATE[FONT_TIME], 1);
   
   // Create date TextLayer 
-  s_date_layer = text_layer_create(GRect(0, MOUTH_LEVEL - (MOUTH_HEIGHT/2), SCREEN_WIDTH, MOUTH_HEIGHT));
+  s_date_layer = text_layer_create(GRect(0, MOUTH_LEVEL - (MOUTH_HEIGHT/2), SCREEN_WIDTH, MOUTH_HEIGHT + (2 * MOUTH_BORDER_SIZE)));
   text_layer_insert_s(window, s_date_layer, FONT_TEMPLATE[FONT_TEXT], 1);
 }
   
