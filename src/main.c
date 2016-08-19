@@ -329,6 +329,9 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
   APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success!");
 }
 
+
+static void handle_bluetooth(bool connected) {}
+
 // Initialise Pebble App
 static void init() {
   
@@ -343,6 +346,11 @@ static void init() {
   
   // Register with TickTimerService
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+  
+  // Register with ConnectionHandler
+  connection_service_subscribe((ConnectionHandlers) {
+    .pebble_app_connection_handler = handle_bluetooth
+  });
   
   // Set handlers to manage the elements inside the Window
   window_set_window_handlers(s_main_window, (WindowHandlers) {
