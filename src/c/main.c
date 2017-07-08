@@ -66,9 +66,30 @@ static TextLayer *s_time_minute_layer;
 static TextLayer *s_date_layer;
 static Layer *s_canvas_layer;
 
-
 static void canvas_update_proc(Layer *this_layer, GContext *ctx);
 static void initialise_color_template();
+
+
+
+
+// Persistent storage key
+#define SETTINGS_KEY 1
+
+// Define our settings struct
+typedef struct ClaySettings {
+  bool ShowDates;
+} ClaySettings;
+
+// An instance of the struct
+static ClaySettings settings;
+
+
+
+
+
+
+
+
 
 
 #ifdef PBL_COLOR
@@ -146,6 +167,8 @@ static void initialise_color_template() {
   
 // Time updater
 static void update_time() {
+  APP_LOG(APP_LOG_LEVEL_INFO, "Updating time");
+  
   // Get a tm structure
   time_t temp = time(NULL); 
   struct tm *tick_time = localtime(&temp);
@@ -159,13 +182,14 @@ static void update_time() {
   if(clock_is_24h_style())    strftime(buffer_time_hour, sizeof(buffer_time_hour), "%H", tick_time);
   else                        strftime(buffer_time_hour, sizeof(buffer_time_hour), "%I", tick_time);
   strftime(buffer_time_minute, sizeof(buffer_time_minute), "%M", tick_time);
-  strftime(buffer_date, sizeof(buffer_date), "%A", tick_time);
+   
+  if (settings.ShowDates)     strftime(buffer_date, sizeof(buffer_date), "%a %d", tick_time);
+  else                        strftime(buffer_date, sizeof(buffer_date), "%A", tick_time);
   
+  // Capitalize all alphabeth
   for (unsigned int i = 1; i < sizeof(buffer_date); i++) {
-    if (buffer_date[i] > 0) {
+    if (buffer_date[i] > 96 && buffer_date[i] < 123) {
       buffer_date[i] -= 32;
-    } else {
-      break;
     }
   }
 
@@ -320,9 +344,33 @@ static void bluetooth_handler(bool connected) {
   update_bluetooth_status();
 }
 
+// Initialize the default settings
+static void prv_default_settings() {
+  settings.ShowDates = false;
+}
+
+// Read settings from persistent storage
+static void prv_load_settings() {
+  // Load the default settings
+  prv_default_settings();
+  // Read settings from persistent storage, if they exist
+  persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
+}
+
+// Save the settings to persistent storage
+static void prv_save_settings() {
+  persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
+}
+
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
+  Tuple *show_date_t = dict_find(iterator, MESSAGE_KEY_ShowDate);
+  if(show_date_t) {
+    settings.ShowDates = show_date_t->value->int32 == 1;
+  }
+  prv_save_settings();
   update_time();
 }
+
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) {
   APP_LOG(APP_LOG_LEVEL_ERROR, "Message dropped!");
@@ -336,8 +384,14 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
   APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success!");
 }
 
+
+
+
+
+
 // Initialise Pebble App
 static void init() {
+  prv_load_settings();
   
   // Color assignment
   initialise_color_template();
@@ -361,16 +415,16 @@ static void init() {
     .load = main_window_load,
     .unload = main_window_unload
   });
-  
+   
   // Register callbacks
   app_message_register_inbox_received(inbox_received_callback);
   app_message_register_inbox_dropped(inbox_dropped_callback);
   app_message_register_outbox_failed(outbox_failed_callback);
   app_message_register_outbox_sent(outbox_sent_callback);
-  
+
   // Open AppMessage
   app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
-
+  
   window_set_background_color(s_main_window, COLOR_TEMPLATE[COLOR_BACKGROUND]);
   // Show the Window on the watch, with animated=true
   window_stack_push(s_main_window, true);

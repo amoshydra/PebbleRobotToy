@@ -1,12 +1,19 @@
 {
     "author": "CodeHydra",
-    "dependencies": {},
+    "dependencies": {
+        "pebble-clay": "^1.0.4"
+    },
     "keywords": [],
     "name": "robot-toy",
     "pebble": {
+        "capabilities": [
+            "configurable"
+        ],
         "displayName": "Robot Toy",
-        "enableMultiJS": false,
-        "messageKeys": [],
+        "enableMultiJS": true,
+        "messageKeys": [
+            "ShowDate"
+        ],
         "projectType": "native",
         "resources": {
             "media": [
@@ -30,5 +37,5 @@
             "watchface": true
         }
     },
-    "version": "1.3.0"
+    "version": "1.4.0"
 }
