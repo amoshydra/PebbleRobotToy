@@ -182,6 +182,9 @@ static void update_time() {
 #endif
 }
 
+static void update_bluetooth_status() {
+  
+}
 
 // Layer constructor
 static void text_layer_insert(Window *window, TextLayer *s_layer, GColor GCFore, GColor GCBack, GFont GFFont) {
@@ -313,8 +316,12 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_time();
 }
 
+static void bluetooth_handler(bool connected) {
+  update_bluetooth_status();
+}
+
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
-  
+  update_time();
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) {
@@ -328,9 +335,6 @@ static void outbox_failed_callback(DictionaryIterator *iterator, AppMessageResul
 static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
   APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success!");
 }
-
-
-static void handle_bluetooth(bool connected) {}
 
 // Initialise Pebble App
 static void init() {
@@ -349,7 +353,7 @@ static void init() {
   
   // Register with ConnectionHandler
   connection_service_subscribe((ConnectionHandlers) {
-    .pebble_app_connection_handler = handle_bluetooth
+    .pebble_app_connection_handler = bluetooth_handler
   });
   
   // Set handlers to manage the elements inside the Window
@@ -357,7 +361,6 @@ static void init() {
     .load = main_window_load,
     .unload = main_window_unload
   });
-  
   
   // Register callbacks
   app_message_register_inbox_received(inbox_received_callback);

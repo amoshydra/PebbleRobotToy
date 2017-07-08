@@ -4,15 +4,20 @@
     "keywords": [],
     "name": "robot-toy",
     "pebble": {
-        "capabilities": [
-            ""
-        ],
         "displayName": "Robot Toy",
         "enableMultiJS": false,
-        "messageKeys": {},
+        "messageKeys": [],
         "projectType": "native",
         "resources": {
-            "media": []
+            "media": [
+                {
+                    "file": "images/robottoy.png",
+                    "menuIcon": true,
+                    "name": "APP_LOGO",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
         },
         "sdkVersion": "3",
         "targetPlatforms": [
